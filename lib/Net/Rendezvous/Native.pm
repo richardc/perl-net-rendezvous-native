@@ -13,7 +13,6 @@ Net::Rendezvous::Native - Use native rendezvous library, if available
  my $res = Net::Rendezvous->new( $service, );
  $res->discover;
 
-
 =head1 DESCRIPTION
 
 Net::Rendezvous::Native will augment Net::Rendezvous to use a native
@@ -23,7 +22,21 @@ Net::Rendezvous does.
 
 =cut
 
+# first, move the original Net::Rendezvous to one side
+require Net::Rendezvous;
+%Net::Rendezvous::Native::Perl:: = %Net::Rendezvous::;
+delete $Net::Rendezvous::{$_} for keys %Net::Rendezvous::;
+{
+    package Net::Rendezvous;
+    our @ISA = qw( Net::Rendezvous::Native );
+}
 
+sub new {
+    my $self = shift;
+    my $into = "Net::Rendezvous::Native::Perl";
+    warn "remaking '$self' as a '$into'";
+    $into->new( @_ );
+}
 
 =head1 AUTHOR
 
