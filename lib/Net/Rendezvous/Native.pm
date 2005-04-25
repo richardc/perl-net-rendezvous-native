@@ -10,26 +10,16 @@ Net::Rendezvous::Native - Use native rendezvous library, if available
 =head1 SYNOPSIS
 
  use Net::Rendezvous::Native;
- my $res = Net::Rendezvous->new( $service, );
+ my $res = Net::Rendezvous::Native->new( $service, );
  $res->discover;
 
 =head1 DESCRIPTION
 
-Net::Rendezvous::Native will augment Net::Rendezvous to use a native
-Rendezvous library, if available.  The native versions are typically
-quicker to query, and more robust than doing it by hand as
-Net::Rendezvous does.
+Net::Rendezvous::Native presents the same interface as Net::Rendezvous
+but selects a native Rendezvous library, if available.  The native
+versions are typically quicker to query, and sometimes more robust.
 
 =cut
-
-# first, move the original Net::Rendezvous to one side
-require Net::Rendezvous;
-%Net::Rendezvous::Native::Perl:: = %Net::Rendezvous::;
-delete $Net::Rendezvous::{$_} for keys %Net::Rendezvous::;
-{
-    package Net::Rendezvous;
-    our @ISA = qw( Net::Rendezvous::Native );
-}
 
 sub new {
     my $self = shift;
